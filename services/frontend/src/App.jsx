@@ -268,7 +268,6 @@ export default function App() {
             <div className="row" style={{ marginBottom: 10 }}>
               <input value={orderId} onChange={(e) => setOrderId(e.target.value)} placeholder="order_id" />
               <button className="secondary" disabled={busy} onClick={() => wrap(getOrder)}>Получить</button>
-              <button className="secondary" disabled={busy} onClick={() => wrap(pollFinal)}>Ожидать финал</button>
             </div>
 
             <pre className="pre">{orderDetails === null ? "—" : pretty(orderDetails)}</pre>
