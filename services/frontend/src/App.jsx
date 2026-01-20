@@ -13,7 +13,7 @@ function pickStoredUser() {
 function storeUser(v) {
   try {
     localStorage.setItem("gozon_user_id", v);
-  } catch {}
+  } catch { }
 }
 
 function pretty(x) {
@@ -301,9 +301,9 @@ export default function App() {
         <h2>Порты</h2>
         <div className="muted">
           Frontend: <span className="kbd">http://localhost:3000</span> ·
-          Gateway: <span className="kbd">http://localhost:8080</span> ·
-          Swagger: <span className="kbd">http://localhost:8088</span> ·
-          Kafka UI: <span className="kbd">http://localhost:8085</span>
+          Gateway: <span className="kbd">http://localhost:5050</span> ·
+          Swagger: <span className="kbd">http://localhost:5058</span> ·
+          Kafka UI: <span className="kbd">http://localhost:5055</span>
         </div>
       </section>
     </div>

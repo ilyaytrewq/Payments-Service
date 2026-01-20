@@ -9,7 +9,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-DEFAULT_BASE_URL = "http://158.160.175.197:8080/api/v1"
+DEFAULT_BASE_URL = "http://158.160.175.197:5050/api/v1"
 
 #
 def parse_base_url() -> str:

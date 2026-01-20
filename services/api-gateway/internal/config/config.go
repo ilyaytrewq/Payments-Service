@@ -11,7 +11,7 @@ type Config struct {
 
 func MustLoad() Config {
 	return Config{
-		HTTPAddr:         getenv("GATEWAY_HTTP_ADDR", ":8080"),
+		HTTPAddr:         getenv("GATEWAY_HTTP_ADDR", ":5050"),
 		BasePath:         getenv("GATEWAY_BASE_PATH", "/api/v1"),
 		OrdersGRPCAddr:   getenv("ORDERS_GRPC_ADDR", "orders-service:9001"),
 		PaymentsGRPCAddr: getenv("PAYMENTS_GRPC_ADDR", "payments-service:9002"),

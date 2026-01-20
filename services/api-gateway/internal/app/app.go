@@ -49,11 +49,11 @@ func Run(ctx context.Context, cfg config.Config) error {
 
 	router.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{
-			"http://localhost:8088",
-			"http://127.0.0.1:8088",
-			"http://localhost:8080",
-			"http://127.0.0.1:8080",
-			"http://158.160.219.201:8088",
+			"http://localhost:5058",
+			"http://127.0.0.1:5058",
+			"http://localhost:5050",
+			"http://127.0.0.1:5050",
+			"http://158.160.219.201:5058",
 		},
 		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{

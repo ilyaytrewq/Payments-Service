@@ -18,7 +18,7 @@ servers:
       host:
         default: 158.160.219.201
       port:
-        default: "8080"
+        default: "5050"
 
 # Root-level security is explicitly defined to satisfy linters.
 # Most operations do not require auth, except where overridden per-operation.

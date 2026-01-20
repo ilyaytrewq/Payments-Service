@@ -9,8 +9,8 @@ func TestMustLoadDefaults(t *testing.T) {
 	t.Setenv("PAYMENTS_GRPC_ADDR", "")
 
 	cfg := MustLoad()
-	if cfg.HTTPAddr != ":8080" {
-		t.Fatalf("HTTPAddr = %q, want %q", cfg.HTTPAddr, ":8080")
+	if cfg.HTTPAddr != ":5050" {
+		t.Fatalf("HTTPAddr = %q, want %q", cfg.HTTPAddr, ":5050")
 	}
 	if cfg.BasePath != "/api/v1" {
 		t.Fatalf("BasePath = %q, want %q", cfg.BasePath, "/api/v1")

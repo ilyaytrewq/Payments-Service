@@ -22,13 +22,13 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
     ports:
       - "29092:29092"
-      - "9092:9092" 
+      - "9092:9092"
     volumes:
       - ./data/kafka:/tmp/kraft-combined-logs
     networks:
       - kafka-net
     healthcheck:
-      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server broker:9092 >/dev/null 2>&1"]
+      test: [ "CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server broker:9092 >/dev/null 2>&1" ]
       interval: 5s
       timeout: 5s
       retries: 30
@@ -46,26 +46,26 @@ services:
       - /bin/bash
       - -lc
       - |
-          set -euo pipefail
-          echo "Creating topics..."
-          /opt/kafka/bin/kafka-topics.sh --bootstrap-server broker:9092 \
-            --create --if-not-exists \
-            --topic payments.payment_requested.v1 \
-            --partitions 3 --replication-factor 1
+        set -euo pipefail
+        echo "Creating topics..."
+        /opt/kafka/bin/kafka-topics.sh --bootstrap-server broker:9092 \
+          --create --if-not-exists \
+          --topic payments.payment_requested.v1 \
+          --partitions 3 --replication-factor 1
 
-          /opt/kafka/bin/kafka-topics.sh --bootstrap-server broker:9092 \
-            --create --if-not-exists \
-            --topic payments.payment_result.v1 \
-            --partitions 3 --replication-factor 1
+        /opt/kafka/bin/kafka-topics.sh --bootstrap-server broker:9092 \
+          --create --if-not-exists \
+          --topic payments.payment_result.v1 \
+          --partitions 3 --replication-factor 1
 
-          echo "Topics created:"
-          /opt/kafka/bin/kafka-topics.sh --bootstrap-server broker:9092 --list
+        echo "Topics created:"
+        /opt/kafka/bin/kafka-topics.sh --bootstrap-server broker:9092 --list
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     ports:
-      - "8085:8080"
+      - "5055:5050"
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: broker:9092
@@ -83,7 +83,7 @@ services:
     networks:
       - kafka-net
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -102,7 +102,7 @@ services:
     networks:
       - kafka-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d orders"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d orders" ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -122,9 +122,9 @@ services:
       - /bin/bash
       - -lc
       - |
-          set -euo pipefail
-          psql "postgres://postgres:postgres@orders-postgres:5432/orders?sslmode=disable" \
-            -f /migrations/0001_init.up.sql
+        set -euo pipefail
+        psql "postgres://postgres:postgres@orders-postgres:5432/orders?sslmode=disable" \
+          -f /migrations/0001_init.up.sql
 
   payments-postgres:
     image: postgres:16
@@ -140,7 +140,7 @@ services:
     networks:
       - kafka-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d payments"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d payments" ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -160,9 +160,9 @@ services:
       - /bin/bash
       - -lc
       - |
-          set -euo pipefail
-          psql "postgres://postgres:postgres@payments-postgres:5432/payments?sslmode=disable" \
-            -f /migrations/0001_init.up.sql
+        set -euo pipefail
+        psql "postgres://postgres:postgres@payments-postgres:5432/payments?sslmode=disable" \
+          -f /migrations/0001_init.up.sql
 
   orders-service:
     build:
@@ -224,9 +224,9 @@ services:
       dockerfile: services/api-gateway/Dockerfile
     container_name: api-gateway
     ports:
-      - "8080:8080"
+      - "5050:5050"
     environment:
-      GATEWAY_HTTP_ADDR: ":8080"
+      GATEWAY_HTTP_ADDR: ":5050"
       GATEWAY_BASE_PATH: "/api/v1"
       ORDERS_GRPC_ADDR: "orders-service:9001"
       PAYMENTS_GRPC_ADDR: "payments-service:9002"
@@ -237,28 +237,25 @@ services:
         condition: service_started
     networks:
       - kafka-net
-    
 
   frontend:
-      build:
-        context: .
-        dockerfile: services/frontend/Dockerfile
-      container_name: frontend
-      ports:
-        - "3000:8080"
-      depends_on:
-        api-gateway:
-          condition: service_started
-      networks:
-        - kafka-net
-
-
+    build:
+      context: .
+      dockerfile: services/frontend/Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:5050"
+    depends_on:
+      api-gateway:
+        condition: service_started
+    networks:
+      - kafka-net
 
   swagger-ui:
     image: swaggerapi/swagger-ui:latest
     container_name: swagger-ui
     ports:
-      - "8088:8080"
+      - "5058:5050"
     environment:
       SWAGGER_JSON: /api-files/openapi/api-gateway.yaml
     volumes:

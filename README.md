@@ -2,9 +2,9 @@
 Микросервисная система **Orders + Payments**: создание заказов и управление счетом пользователя.
 Оплата запускается **асинхронно через Kafka**, а консистентность обеспечивается через **Transactional Outbox/Inbox** и обязательный **Idempotency-Key** для безопасных повторов запросов.
 
-Базовый URL: `http://158.160.175.197:8080/api/v1`  \
-Swagger UI: `http://158.160.175.197:8088`  \
-Kafka UI: `http://158.160.175.197:8085`  \
+Базовый URL: `http://158.160.175.197:5050/api/v1`  \
+Swagger UI: `http://158.160.175.197:5058`  \
+Kafka UI: `http://158.160.175.197:5055`  \
 Frontend (демо): `http://158.160.175.197:3000`
 
 ---
@@ -15,7 +15,7 @@ Frontend (демо): `http://158.160.175.197:3000`
 
 **Бизнес-сервисы:**
 
-1. **api-gateway** (`:8080`) — публичный HTTP API (OpenAPI), проксирует запросы в **Orders** и **Payments** по gRPC.
+1. **api-gateway** (`:5050`) — публичный HTTP API (OpenAPI), проксирует запросы в **Orders** и **Payments** по gRPC.
 2. **orders-service** (`:9001`) — хранит заказы в Postgres, публикует событие `PaymentRequested` через outbox, читает `PaymentResult` и обновляет статус заказа.
 3. **payments-service** (`:9002`) — хранит счета в Postgres, читает `PaymentRequested`, выполняет списание атомарно и пишет `PaymentResult` через outbox.
 4. **frontend** (`:3000`) — небольшой UI для ручного прогона сценария.
@@ -56,9 +56,9 @@ bash scripts/create_topics.sh
 ```
 
 После запуска:
-- API Gateway: `http://158.160.175.197:8080/api/v1`
-- Swagger UI: `http://158.160.175.197:8088`
-- Kafka UI: `http://158.160.175.197:8085`
+- API Gateway: `http://158.160.175.197:5050/api/v1`
+- Swagger UI: `http://158.160.175.197:5058`
+- Kafka UI: `http://158.160.175.197:5055`
 - Frontend: `http://158.160.175.197:3000`
 
 ---
