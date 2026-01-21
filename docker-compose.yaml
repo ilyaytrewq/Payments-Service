@@ -102,7 +102,6 @@ services:
 
   orders-migrate:
     image: postgres:16
-    container_name: orders-migrate
     depends_on:
       orders-postgres:
         condition: service_healthy
@@ -111,13 +110,17 @@ services:
     volumes:
       - ./services/orders-service/db/migrations:/migrations:ro
     restart: "no"
-    entrypoint:
-      - /bin/bash
-      - -lc
-      - |
-        set -euo pipefail
-        psql "postgres://postgres:postgres@orders-postgres:5432/orders?sslmode=disable" \
-          -f /migrations/0001_init.up.sql
+    environment:
+      PGHOST: orders-postgres
+      PGPORT: "5432"
+      PGDATABASE: orders
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    entrypoint: ["/bin/bash", "-lc"]
+    command: |
+      set -euo pipefail
+      psql -v ON_ERROR_STOP=1 -f /migrations/0001_init.up.sql
+
 
   payments-postgres:
     image: postgres:16
@@ -138,7 +141,6 @@ services:
 
   payments-migrate:
     image: postgres:16
-    container_name: payments-migrate
     depends_on:
       payments-postgres:
         condition: service_healthy
@@ -147,13 +149,16 @@ services:
     volumes:
       - ./services/payments-service/db/migrations:/migrations:ro
     restart: "no"
-    entrypoint:
-      - /bin/bash
-      - -lc
-      - |
-        set -euo pipefail
-        psql "postgres://postgres:postgres@payments-postgres:5432/payments?sslmode=disable" \
-          -f /migrations/0001_init.up.sql
+    environment:
+      PGHOST: payments-postgres
+      PGPORT: "5432"
+      PGDATABASE: payments
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    entrypoint: ["/bin/bash", "-lc"]
+    command: |
+      set -euo pipefail
+      psql -v ON_ERROR_STOP=1 -f /migrations/0001_init.up.sql
 
   orders-service:
     build:
