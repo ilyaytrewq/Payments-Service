@@ -20,9 +20,6 @@ services:
 
       KAFKA_NUM_PARTITIONS: 3
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
-    ports:
-      - "29092:29092"
-      - "9092:9092"
     volumes:
       - ./data/kafka:/tmp/kraft-combined-logs
     networks:
@@ -78,8 +75,6 @@ services:
   redis:
     image: redis:7
     container_name: redis
-    ports:
-      - "6379:6379"
     networks:
       - kafka-net
     healthcheck:
@@ -95,8 +90,6 @@ services:
       POSTGRES_DB: orders
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    ports:
-      - "5433:5432"
     volumes:
       - orders_db_data:/var/lib/postgresql/data
     networks:
@@ -133,8 +126,6 @@ services:
       POSTGRES_DB: payments
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    ports:
-      - "5434:5432"
     volumes:
       - payments_db_data:/var/lib/postgresql/data
     networks:
